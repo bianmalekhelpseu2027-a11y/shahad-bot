@@ -2,7 +2,8 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-BOT_TOKEN = "8819650642:AAFZBmLZUdStO4CUJ4I-6f1xNhCI3KUEFG0"
+import os
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
 app = Client("shahad_bot", api_id=2040, api_hash="b18441a1ff607e10a989891a5462e627", bot_token=BOT_TOKEN)
 
