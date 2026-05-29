@@ -1,13 +1,18 @@
+import os
+import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from flask import Flask
+from threading import Thread
 
-
-import os
+# إعدادات البوت (التوكن يتم سحبه تلقائياً من إعدادات Render)
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
+API_ID = 2040
+API_HASH = "b18441a1ff607e10a989891a5462e627"
 
-app = Client("shahad_bot", api_id=2040, api_hash="b18441a1ff607e10a989891a5462e627", bot_token=BOT_TOKEN)
+app = Client("shahad_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# قاموس لتسهيل إدارة الكلمات والروابط
+# القاموس
 replies = {
     "آيلتس": ("اختبار آيلتس (IELTS):", "https://t.me/httpsmO9QD5Mbb_FhYzRk/30"),
     "تواصل": ("التواصل:", "https://t.me/httpsmO9QD5Mbb_FhYzRk/3"),
@@ -39,4 +44,16 @@ async def smart_reply(client, message):
             await message.reply(caption, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رابط المعلومة", url=url)]]))
             break
 
-app.run()
+# إعداد سيرفر الويب لـ Render
+web_app = Flask(__name__)
+
+@web_app.route('/')
+def home():
+    return "Bot is running"
+
+def run_web():
+    web_app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8080)))
+
+if __name__ == "__main__":
+    Thread(target=run_web).start()
+    app.run()
